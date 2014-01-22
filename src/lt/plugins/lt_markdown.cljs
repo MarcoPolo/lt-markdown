@@ -5,20 +5,26 @@
             [lt.objs.editor.pool :as pool]
             [lt.objs.console :as console]
             [lt.objs.plugins :as plugins]
+            [lt.util.dom :as dom]
             [lt.objs.command :as cmd])
   (:require-macros [lt.macros :refer [defui behavior]]))
 
-(defui hello-panel [this]
-  [:div {:class "markdown"}
-   [:h1 "Hello from lt-markdown"]])
+(defn setMarkDownHTML! [ed obj]
+  (set! (.-innerHTML (object/->content obj))
+        (.makeHtml (:converter @obj)
+                   (.getValue (editor/->cm-ed ed)))))
 
-(object/object* ::lt-markdown.hello
-                :tags [:lt-markdown.hello]
-                :name "lt-markdown"
-                :behaviors [::on-close-destroy ::read-editor]
+(defui markdown-skeleton [this]
+  [:div {:class "lt-markdown"}
+   [:h1 "This should be replaced with markdown content eventually"]])
+
+(object/object* ::lt-markdown.markdown
+                :tags [:lt-markdown.markdown]
+                :name "markdown"
+                :behaviors [::on-close-destroy]
                 :init (fn [this]
                         (object/update! this [:converter] #(js/Showdown.converter. #js {:extensions #js ["github"]}))
-                        (hello-panel this)))
+                        (markdown-skeleton this)))
 
 (behavior ::on-close-destroy
           :triggers #{:close}
@@ -29,43 +35,21 @@
                       (object/raise this :destroy)))
 
 (behavior ::read-editor
-          :triggers [:change]
+          :triggers [:change ::read-editor]
           :desc "Markdown: Read the content inside an editor"
-          :reaction (fn [this data]
-                  (console.log "editor Changed"))
-          )
-
-(def hello (object/create ::lt-markdown.hello))
-
-(cmd/command {:command ::say-hello
-              :desc "lt-markdown: Say Hello"
-              :exec (fn []
-                      (tabs/add-or-focus! hello))})
+          :reaction (fn [this]
+                      (console/log "Reading editor")
+                      (let [markdown-obj (:markdown @this)]
+                        (setMarkDownHTML! this markdown-obj))))
 
 (cmd/command {:command ::watch-editor
               :desc "Markdown: Watch this editor for changes"
               :exec (fn []
                       (console/log "saving editor")
-                      (object/update! hello [:editor] #(pool/last-active)))})
-
-(cmd/command {:command ::read-editor
-              :desc "Markdown: Read the content inside an editor"
-              :exec (fn []
-                      (console.log "editor Changed")
-                      )})
-
-(comment
-
-  (set! (.-innerHTML (object/->content hello))
-        (.makeHtml (:converter @hello)
-                   (.getValue (editor/->cm-ed (:editor @hello)))))
-
-
-
-  plugins/load-js
-  (def converter (js/Showdown.converter. #js {:extensions #js ["github"]}))
-  asdf
-
-
-  asdfa
-  )
+                      (let [markdown-obj (object/create ::lt-markdown.markdown)
+                            ed (pool/last-active)]
+                        (tabs/add-or-focus! markdown-obj)
+                        (object/update! ed [:markdown] (fn [] markdown-obj))
+                        (object/add-behavior! ed ::read-editor)
+                        ;; Update the new tab with the markdown
+                        (object/raise ed ::read-editor)))})
