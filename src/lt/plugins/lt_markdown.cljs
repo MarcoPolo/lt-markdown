@@ -3,7 +3,6 @@
             [lt.objs.tabs :as tabs]
             [lt.objs.editor :as editor]
             [lt.objs.editor.pool :as pool]
-            [lt.objs.console :as console]
             [lt.objs.plugins :as plugins]
             [lt.util.dom :as dom]
             [lt.objs.command :as cmd])
@@ -38,14 +37,12 @@
           :triggers [:change ::read-editor]
           :desc "Markdown: Read the content inside an editor"
           :reaction (fn [this]
-                      (console/log "Reading editor")
                       (let [markdown-obj (:markdown @this)]
                         (setMarkDownHTML! this markdown-obj))))
 
 (cmd/command {:command ::watch-editor
               :desc "Markdown: Watch this editor for changes"
               :exec (fn []
-                      (console/log "saving editor")
                       (let [markdown-obj (object/create ::lt-markdown.markdown)
                             ed (pool/last-active)]
                         (tabs/add-or-focus! markdown-obj)
