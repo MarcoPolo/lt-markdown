@@ -1,0 +1,4 @@
+{:+ {:app [(:lt.objs.plugins/load-js ["node_modules/showdown/compressed/showdown.js"
+                                      "node_modules/showdown/compressed/extensions/github.js"
+                                      "lt_markdown_compiled.js"])]
+     :lt-markdown.hello [:lt.plugins.lt-markdown/on-close-destroy]}}
