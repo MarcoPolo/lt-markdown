@@ -10,6 +10,10 @@
   overflow: scroll;
 }
 
+.lt-markdown ul{
+  list-style: initial;
+}
+
 .lt-markdown em{
   font-style: italic;
 }
