@@ -8,6 +8,7 @@
   padding: 30px;
   color: black;
   overflow: scroll;
+  padding-bottom:800px;
 }
 
 .lt-markdown ul{
@@ -221,6 +222,7 @@
   margin-bottom: 0;
 }
 .lt-markdown table {
+  color: black;
   padding: 0;
 }
 .lt-markdown table tr {

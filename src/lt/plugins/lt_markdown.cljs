@@ -9,9 +9,12 @@
   (:require-macros [lt.macros :refer [defui behavior]]))
 
 (defn setMarkDownHTML! [ed obj]
+  (def k (.getValue (editor/->cm-ed ed)))
   (set! (.-innerHTML (object/->content obj))
-        (.makeHtml (:converter @obj)
-                   (.getValue (editor/->cm-ed ed)))))
+        (js/marked (.getValue (editor/->cm-ed ed)))))
+
+(defn get-filename [ed]
+  (-> @ed :info :name))
 
 (defui markdown-skeleton [this]
   [:div {:class "lt-markdown"}
@@ -21,8 +24,9 @@
                 :tags [:lt-markdown.markdown]
                 :name "markdown"
                 :behaviors [::on-close-destroy]
-                :init (fn [this]
-                        (object/update! this [:converter] #(js/Showdown.converter. #js {:extensions #js ["github"]}))
+                :init (fn [this filename]
+                        (println "Filename is " filename)
+                        (object/update! this [:name] (constantly (str filename " - Live")))
                         (markdown-skeleton this)))
 
 (behavior ::on-close-destroy
@@ -43,10 +47,24 @@
 (cmd/command {:command ::watch-editor
               :desc "Markdown: Watch this editor for changes"
               :exec (fn []
-                      (let [markdown-obj (object/create ::lt-markdown.markdown)
-                            ed (pool/last-active)]
+                      (let [ed (pool/last-active)
+                            filename (get-filename ed)
+                            markdown-obj (object/create ::lt-markdown.markdown filename)]
                         (tabs/add-or-focus! markdown-obj)
                         (object/update! ed [:markdown] (fn [] markdown-obj))
                         (object/add-behavior! ed ::read-editor)
                         ;; Update the new tab with the markdown
                         (object/raise ed ::read-editor)))})
+
+(comment
+  (clojure.string/split
+   (:name (:info @(pool/last-active)))
+   #"\.")
+
+  (def j @k)
+  (keys @k)
+  (:name @k)
+  (pr-str @k)
+  (js/require "marked")
+  (js/marked k)
+  )
