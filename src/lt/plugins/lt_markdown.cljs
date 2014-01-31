@@ -9,7 +9,6 @@
   (:require-macros [lt.macros :refer [defui behavior]]))
 
 (defn setMarkDownHTML! [ed obj]
-  (def k (.getValue (editor/->cm-ed ed)))
   (set! (.-innerHTML (object/->content obj))
         (js/marked (.getValue (editor/->cm-ed ed)))))
 
@@ -25,7 +24,6 @@
                 :name "markdown"
                 :behaviors [::on-close-destroy]
                 :init (fn [this filename]
-                        (println "Filename is " filename)
                         (object/update! this [:name] (constantly (str filename " - Live")))
                         (markdown-skeleton this)))
 
@@ -55,16 +53,3 @@
                         (object/add-behavior! ed ::read-editor)
                         ;; Update the new tab with the markdown
                         (object/raise ed ::read-editor)))})
-
-(comment
-  (clojure.string/split
-   (:name (:info @(pool/last-active)))
-   #"\.")
-
-  (def j @k)
-  (keys @k)
-  (:name @k)
-  (pr-str @k)
-  (js/require "marked")
-  (js/marked k)
-  )
