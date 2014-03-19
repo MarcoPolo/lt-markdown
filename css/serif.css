@@ -2,16 +2,11 @@
   font-family: "Palatino Linotype", serif;
   font-size: 18px;
   line-height: 1.6;
-  padding-top: 10px;
-  padding-bottom: 10px;
   background-color: #fefdfc;
-  padding: 30px;
   color: #444;
   overflow: scroll;
 	-webkit-font-smoothing: antialiased;
-	width: 80%;
-	height: auto;
-	margin: 40px auto;
+  padding: 40px 10%;
 }
 
 ::selection {
