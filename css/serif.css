@@ -350,7 +350,7 @@
 .lt-markdown .highlight pre {
   background-color: #f8f8f8;
   border: 1px solid #cccccc;
-  font-size: 0.8;
+  font-size: 0.8em;
   line-height: 19px;
   overflow: auto;
   padding: 6px 10px;
@@ -359,7 +359,7 @@
 .lt-markdown pre {
   background-color: #f8f8f8;
   border: 1px solid #cccccc;
-  font-size: 0.8;
+  font-size: 0.8em;
   line-height: 19px;
   overflow: auto;
   padding: 6px 10px;
