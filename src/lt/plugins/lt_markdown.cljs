@@ -15,6 +15,18 @@
 
 (def style-content (:content (files/open-sync css-path)))
 
+(defn wrap-css
+  [title html-content]
+  (str "<!DOCTYPE html><html>"
+       "<head><meta charset='utf-8'>"
+       "<title>" title "</title>"
+       "<style>" style-content "</style>"
+       "</head>"
+       "<body>"
+       "<div class='lt-markdown'>" html-content "</div>"
+       "</body>"
+       "</html>"))
+
 (defn setMarkDownHTML! [ed obj]
   (set! (.-innerHTML (object/->content obj))
         (js/marked (.getValue (editor/->cm-ed ed)))))
