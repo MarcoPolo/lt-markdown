@@ -72,3 +72,12 @@
                         (object/add-behavior! ed ::read-editor)
                         ;; Update the new tab with the markdown
                         (object/raise ed ::read-editor)))})
+
+(cmd/command {:command ::export-html
+              :desc "Markdown: Export to HTML"
+              :exec (fn []
+                      (let [ed (pool/last-active)
+                            out-path (-> @ed :info :path files/without-ext (str ".html"))
+                            html-content (js/marked (.getValue (editor/->cm-ed ed)))
+                            title (-> @ed :info :name files/without-ext)]
+                        (files/save out-path (wrap-css title html-content))))})
