@@ -5,8 +5,15 @@
             [lt.objs.editor.pool :as pool]
             [lt.objs.plugins :as plugins]
             [lt.util.dom :as dom]
+            [lt.objs.files :as files]
             [lt.objs.command :as cmd])
   (:require-macros [lt.macros :refer [defui behavior]]))
+
+(def plugin-dir (plugins/find-plugin "Markdown"))
+
+(def css-path (files/join plugin-dir "css/github.css"))
+
+(def style-content (:content (files/open-sync css-path)))
 
 (defn setMarkDownHTML! [ed obj]
   (set! (.-innerHTML (object/->content obj))
