@@ -5,8 +5,27 @@
             [lt.objs.editor.pool :as pool]
             [lt.objs.plugins :as plugins]
             [lt.util.dom :as dom]
+            [lt.objs.files :as files]
             [lt.objs.command :as cmd])
   (:require-macros [lt.macros :refer [defui behavior]]))
+
+(def plugin-dir (plugins/find-plugin "Markdown"))
+
+(def css-path (files/join plugin-dir "css/github.css"))
+
+(def style-content (:content (files/open-sync css-path)))
+
+(defn wrap-css
+  [title html-content]
+  (str "<!DOCTYPE html><html>"
+       "<head><meta charset='utf-8'>"
+       "<title>" title "</title>"
+       "<style>" style-content "</style>"
+       "</head>"
+       "<body>"
+       "<div class='lt-markdown'>" html-content "</div>"
+       "</body>"
+       "</html>"))
 
 (defn setMarkDownHTML! [ed obj]
   (set! (.-innerHTML (object/->content obj))
@@ -53,3 +72,12 @@
                         (object/add-behavior! ed ::read-editor)
                         ;; Update the new tab with the markdown
                         (object/raise ed ::read-editor)))})
+
+(cmd/command {:command ::export-html
+              :desc "Markdown: Export to HTML"
+              :exec (fn []
+                      (let [ed (pool/last-active)
+                            out-path (-> @ed :info :path files/without-ext (str ".html"))
+                            html-content (js/marked (.getValue (editor/->cm-ed ed)))
+                            title (-> @ed :info :name files/without-ext)]
+                        (files/save out-path (wrap-css title html-content))))})
