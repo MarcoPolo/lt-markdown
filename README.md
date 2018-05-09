@@ -7,26 +7,25 @@ Restart Light Table before you can use it.
 
 Installation:
 
-control+spacebar to open the command window
+1. control+spacebar to open the command window
 
-type "Plugins: show plugin manager"
+2. type "Plugins: show plugin manager"
 
-search for Markdown by Marcopolo
+3. search for "Markdown by Marcopolo"
 
-Restart Light Table....
+4. Restart Light Table....
 
-control+spacebar
+5. press control+spacebar
 
-type "Markown: watch this editor for changes"
+6. type "Markown: watch this editor for changes"
 
-side by side (split screen)
 
-control+spacebar
+Side by side (split screen):
 
-and type 
+1. press control+spacebar
 
-Tabs: Add a tabset
+2. type "Tabs: Add a tabset"
 
-then move the tab over accordingly
+3. now move the tab over accordingly
 
-have fun
+4. Have fun!
